@@ -45,6 +45,9 @@
             overflow-x: hidden;
         }
 
+        /* Set overflow hidden initially to prevent scrolling if modal is shown */
+        body.modal-open { overflow: hidden; }
+
         .glass-nav {
             background: rgba(12, 12, 14, 0.8);
             backdrop-filter: blur(15px);
@@ -83,8 +86,8 @@
 </head>
 <body class="antialiased min-h-screen">
 
-    <!-- PROTECTIVE MODAL: RULES ARE PRESERVED EXACTLY -->
-    <div id="protocolModal" class="fixed inset-0 z-[200] flex items-center justify-center p-4">
+    <!-- PROTECTIVE MODAL: Hidden by default via 'hidden' class -->
+    <div id="protocolModal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4">
         <div class="absolute inset-0 modal-blur"></div>
         <div class="relative bg-[#16161a] border border-white/10 w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden">
             <div class="p-8 md:p-10 text-right">
@@ -95,7 +98,7 @@
                     <h2 class="text-2xl font-black text-white">⚠️ بروتوكول التبليغ الآمن</h2>
                 </div>
                 
-                <p class="text-zinc-400 mb-8 font-medium">لضمان حذف الفيديو وعدم ترويجه بواسطة الخوارزمية، يرجى اتباع هذه الخطوات بدقة (ولا اشويك!!):</p>
+                <p class="text-zinc-400 mb-8 font-medium">لضمان حذف الفيديو وعدم ترويجه بواسطة الخوارزمية، يرجى اتباع هذه الخطوات بدقة:</p>
                 
                 <div class="space-y-4 mb-10">
                     <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5">
@@ -108,7 +111,7 @@
                     </div>
                     <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5">
                         <span class="w-8 h-8 flex items-center justify-center font-black bg-brand-500 text-white rounded-lg shrink-0">٣</span>
-                        <span class="text-white font-bold">بلغ، مع اختيار السبب الأنسب (<span class="text-brand-400">سياسة حماية الطفل أو يحض على الكراهية</span>).</span>
+                        <span class="text-white font-bold">بلغ، مع اختيار السبب الأنسب (<span class="text-brand-400">سياسة حماية الطفل</span>).</span>
                     </div>
                     <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5">
                         <span class="w-8 h-8 flex items-center justify-center font-black bg-brand-500 text-white rounded-lg shrink-0">٤</span>
@@ -137,7 +140,7 @@
     <main class="pt-36 pb-20 px-6 md:px-12 max-w-[1600px] mx-auto">
         <div class="mb-12 text-right">
             <h1 class="text-3xl md:text-4xl font-black text-white mb-2">تنظيف المحتوى</h1>
-            <p class="text-zinc-500 font-medium">ساهم في حماية المجتمع عبر التبليغ الآمن عن المحتوى المخالف.</p>
+            <p class="text-zinc-500 font-medium">ساهم في حماية المجتمع القاشاوي عبر التبليغ الآمن عن المحتوى المخالف.</p>
         </div>
 
         <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
@@ -185,8 +188,30 @@
         const emptyState = document.getElementById('emptyState');
         const confirmModal = document.getElementById('reportConfirmModal');
         const confirmBtn = document.getElementById('confirmRedirectBtn');
+        const protocolModal = document.getElementById('protocolModal');
         let activeVideoId = null;
 
+        // --- ONE-TIME PROTOCOL LOGIC ---
+        const checkProtocol = () => {
+            const hasAccepted = localStorage.getItem('gacha_protocol_accepted');
+            if (!hasAccepted) {
+                protocolModal.classList.remove('hidden');
+                protocolModal.classList.add('flex');
+                document.body.classList.add('modal-open');
+            }
+        };
+
+        document.getElementById('btnAcceptProtocol').onclick = () => {
+            localStorage.setItem('gacha_protocol_accepted', 'true');
+            protocolModal.classList.add('hidden');
+            protocolModal.classList.remove('flex');
+            document.body.classList.remove('modal-open');
+        };
+
+        // Initialize Protocol Check
+        checkProtocol();
+
+        // --- FIREBASE LOGIC ---
         async function syncInitial() {
             const videoId = "H7Y_0z5BJ0E";
             await setDoc(doc(db, "videos", videoId), {
@@ -201,7 +226,6 @@
         window.closeReportModal = () => { confirmModal.classList.add('hidden'); confirmModal.classList.remove('flex'); };
         window.triggerReportFlow = (id) => { activeVideoId = id; confirmModal.classList.remove('hidden'); confirmModal.classList.add('flex'); };
         confirmBtn.onclick = () => { if (activeVideoId) window.open(`https://www.youtube.com/watch?v=${activeVideoId}`, '_blank'); closeReportModal(); };
-        document.getElementById('btnAcceptProtocol').onclick = () => { document.getElementById('protocolModal').classList.add('hidden'); document.body.style.overflow = 'auto'; };
 
         onSnapshot(collection(db, "videos"), (snapshot) => {
             videoGrid.innerHTML = '';
