@@ -4,14 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gacha Reports | Secure reporting platform</title>
-  <link rel="icon" type="image/png" href="https://i.postimg.cc/Hx1tWQJf/tsmym-bdwn-ʿnwan.png">
-
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/Hx1tWQJf/tsmym-bdwn-ʿnwan.png">
     <link rel="apple-touch-icon" href="https://i.postimg.cc/Hx1tWQJf/tsmym-bdwn-ʿnwan.png">
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Cairo -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <script>
@@ -21,172 +17,158 @@
                 extend: {
                     colors: {
                         brand: {
-                            400: '#808bf5',
-                            500: '#5865F2', // Discord Blurple
-                            600: '#4752C4',
-                        },
-                        surface: {
-                            50: '#1e1f22',
-                            100: '#2b2d31',
-                            900: '#0f0f0f',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
                         },
                         risk: {
-                            regular: '#3ba55c', // Discord Green
-                            medium: '#faa61a',  // Discord Yellow
-                            urgent: '#ed4245',  // Discord Red
+                            regular: '#10b981',
+                            medium: '#f59e0b',
+                            urgent: '#ef4444',
                         }
                     },
-                    fontFamily: {
-                        sans: ['Cairo', 'Inter', 'system-ui', 'sans-serif'],
-                    }
+                    fontFamily: { sans: ['Cairo', 'sans-serif'] }
                 }
             }
         }
     </script>
 
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         body {
-            background-color: #0f0f0f;
-            background-image: radial-gradient(circle at 50% -20%, #1e213e 0%, #0f0f0f 45%);
+            background-color: #0c0c0e;
+            background-image: radial-gradient(circle at 50% -20%, #1a1c35 0%, #0c0c0e 60%);
             background-attachment: fixed;
             color: #f1f1f1;
             font-family: 'Cairo', sans-serif;
-            overflow: hidden; 
-            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
         }
 
-        .glass-header {
-            background: rgba(15, 15, 15, 0.7);
-            backdrop-filter: blur(12px);
+        .glass-nav {
+            background: rgba(12, 12, 14, 0.8);
+            backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .video-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: fadeIn 0.5s ease-out forwards;
+        .thumb-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1.5rem;
+            transition: transform 0.3s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .thumb-wrapper:hover {
+            transform: scale(1.02);
         }
 
-        @media (underline: hover) {
-            .video-card:hover { transform: translateY(-4px); }
-            .video-card:hover .thumb-overlay { opacity: 1; }
+        .thumb-overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-        @media (hover: none) {
-            .thumb-overlay { opacity: 1; background: rgba(0,0,0,0.2); }
+        .video-item:hover .thumb-overlay {
+            opacity: 1;
         }
 
-        .btn-glow:hover { box-shadow: 0 0 20px rgba(88, 101, 242, 0.4); }
+        .modal-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.9);
+        }
 
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #0f0f0f; }
-        ::-webkit-scrollbar-thumb { background: #2b2d31; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
 </head>
 <body class="antialiased min-h-screen">
 
-    <!-- قائمة بروتوكول التبليغ الآمن -->
+    <!-- PROTECTIVE MODAL: RULES ARE PRESERVED EXACTLY -->
     <div id="protocolModal" class="fixed inset-0 z-[200] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/95 backdrop-blur-xl"></div>
-        <div class="relative bg-surface-50 border border-white/10 w-full max-w-lg rounded-[2rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
-            <div class="p-6 md:p-10 overflow-y-auto">
-                <div class="flex items-center gap-3 md:gap-4 mb-6 text-right">
-                    <div class="bg-yellow-500/10 p-2 md:p-3 rounded-2xl shrink-0">
-                        <i data-lucide="shield-alert" class="w-6 h-6 md:w-8 md:h-8 text-yellow-500"></i>
+        <div class="absolute inset-0 modal-blur"></div>
+        <div class="relative bg-[#16161a] border border-white/10 w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden">
+            <div class="p-8 md:p-10 text-right">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="bg-yellow-500/10 p-3 rounded-2xl">
+                        <i data-lucide="shield-alert" class="w-8 h-8 text-yellow-500"></i>
                     </div>
-                    <h2 class="text-xl md:text-2xl font-black text-white tracking-tight">⚠️ بروتوكول التبليغ الآمن</h2>
+                    <h2 class="text-2xl font-black text-white">⚠️ بروتوكول التبليغ الآمن</h2>
                 </div>
                 
-                <p class="text-zinc-300 text-sm leading-relaxed mb-6 font-medium text-right">
-                    لضمان حذف الفيديو وعدم ترويجه بواسطة الخوارزمية، يرجى اتباع هذه الخطوات بدقة عند النقر:
-                </p>
+                <p class="text-zinc-400 mb-8 font-medium">لضمان حذف الفيديو وعدم ترويجه بواسطة الخوارزمية، يرجى اتباع هذه الخطوات بدقة (ولا اشويك!!):</p>
                 
-                <div class="space-y-3 mb-8 text-right">
-                    <div class="flex items-center gap-4 p-3 md:p-4 rounded-2xl bg-white/5 text-sm text-zinc-200 border border-white/5">
-                        <span class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center font-black bg-brand-500/20 text-brand-400 rounded-lg shrink-0">١</span>
-                        <span>أوقف الفيديو <span class="text-white font-bold">فوراً</span>.</span>
+                <div class="space-y-4 mb-10">
+                    <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5">
+                        <span class="w-8 h-8 flex items-center justify-center font-black bg-brand-500 text-white rounded-lg shrink-0">١</span>
+                        <span class="text-white font-bold">أوقف الفيديو <span class="text-brand-400">فوراً</span>.</span>
                     </div>
-                    <div class="flex items-center gap-4 p-3 md:p-4 rounded-2xl bg-white/5 text-sm text-zinc-200 border border-white/5">
-                        <span class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center font-black bg-brand-500/20 text-brand-400 rounded-lg shrink-0">٢</span>
-                        <span>كتم <span class="text-white font-bold">الصوت</span>.</span>
+                    <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5">
+                        <span class="w-8 h-8 flex items-center justify-center font-black bg-brand-500 text-white rounded-lg shrink-0">٢</span>
+                        <span class="text-white font-bold">كتم <span class="text-brand-400">الصوت</span>.</span>
                     </div>
-                    <div class="flex items-center gap-4 p-3 md:p-4 rounded-2xl bg-white/5 text-sm text-zinc-200 border border-white/5">
-                        <span class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center font-black bg-brand-500/20 text-brand-400 rounded-lg shrink-0">٣</span>
-                        <span>بلغ، مع اختيار السبب الأنسب (<span class="text-brand-400 font-bold">سياسة حماية الطفل</span> أو <span class="text-brand-400 font-bold">خطاب الكراهية</span>).</span>
+                    <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5">
+                        <span class="w-8 h-8 flex items-center justify-center font-black bg-brand-500 text-white rounded-lg shrink-0">٣</span>
+                        <span class="text-white font-bold">بلغ، مع اختيار السبب الأنسب (<span class="text-brand-400">سياسة حماية الطفل أو يحض على الكراهية</span>).</span>
                     </div>
-                    <div class="flex items-center gap-4 p-3 md:p-4 rounded-2xl bg-white/5 text-sm text-zinc-200 border border-white/5">
-                        <span class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center font-black bg-brand-500/20 text-brand-400 rounded-lg shrink-0">٤</span>
-                        <span>غادر <span class="text-white font-bold">بسلام</span> دون تعليق (التعليقات تروج للفيديو!).</span>
+                    <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5">
+                        <span class="w-8 h-8 flex items-center justify-center font-black bg-brand-500 text-white rounded-lg shrink-0">٤</span>
+                        <span class="text-white font-bold">غادر <span class="text-brand-400">بسلام</span> دون تعليق.</span>
                     </div>
                 </div>
 
-                <button id="btnAcceptProtocol" class="w-full py-4 bg-brand-500 hover:bg-brand-600 text-white font-black rounded-2xl btn-glow transition-all active:scale-95 text-lg shadow-lg shadow-brand-500/20">
-                    مفهوم!
+                <button id="btnAcceptProtocol" class="w-full py-5 bg-brand-500 hover:bg-brand-600 text-white font-black rounded-2xl transition-all shadow-xl shadow-brand-500/20 active:scale-95 text-lg">
+                    مفهوم، سألتزم بالخطوات
                 </button>
             </div>
         </div>
     </div>
 
     <!-- Header -->
-  <header class="fixed top-0 left-0 right-0 h-16 glass-header flex items-center justify-between px-4 md:px-10 z-50">
-    <div class="flex items-center gap-3"> 
-        <img src="https://i.postimg.cc/Hx1tWQJf/tsmym-bdwn-ʿnwan.png" 
-             alt="Logo" 
-             class="h-10 w-auto object-contain rounded-xl shadow-sm">
-        
-        <span class="text-lg md:text-xl font-black tracking-tight text-white">
-            Gacha<span class="text-brand-500">Reports</span>
-        </span>
-    </div>
-</header>
+    <header class="fixed top-0 left-0 right-0 h-24 glass-nav z-50 px-6 md:px-12 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <img src="https://i.postimg.cc/Hx1tWQJf/tsmym-bdwn-ʿnwan.png" alt="Logo" class="h-12 w-12 rounded-xl">
+            <div class="flex flex-col">
+                <span class="text-xl font-black text-white uppercase tracking-wider leading-none">Gacha<span class="text-brand-500">Reports</span></span>
+                <span class="text-[11px] font-bold text-zinc-500 mt-1 tracking-tight">By @Novi._.moon0</span>
+            </div>
+        </div>
+    </header>
 
-    <main class="pt-20 md:pt-24 pb-10 px-4 md:px-10 max-w-[1800px] mx-auto">
-        <div class="mb-8 text-right">
-            <h1 class="text-2xl md:text-3xl font-black text-white mb-2">تنظيف المحتوى</h1>
-            <p class="text-zinc-400 text-sm md:text-base font-medium">تقليل الأضرار وتنقية فيديوهات القاشا العربية.</p>
+    <main class="pt-36 pb-20 px-6 md:px-12 max-w-[1600px] mx-auto">
+        <div class="mb-12 text-right">
+            <h1 class="text-3xl md:text-4xl font-black text-white mb-2">تنظيف المحتوى</h1>
+            <p class="text-zinc-500 font-medium">ساهم في حماية المجتمع عبر التبليغ الآمن عن المحتوى المخالف.</p>
         </div>
 
-        <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
-            <!-- الفيديوهات ستجلب من Firestore -->
+        <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+            <!-- Frameless video items will appear here -->
         </div>
 
-        <div id="emptyState" class="mt-10 md:mt-20 flex flex-col items-center justify-center py-16 border-2 border-dashed border-white/5 rounded-[2rem]">
-            <p class="text-zinc-500 font-bold text-sm md:text-base">القائمة فارغة حالياً.</p>
+        <div id="emptyState" class="hidden py-40 text-center border-2 border-dashed border-white/5 rounded-[3rem]">
+            <p class="text-zinc-600 font-bold">نظام التقارير خالٍ من المخالفات حالياً.</p>
         </div>
     </main>
 
-    <!-- قائمة التأكيد قبل التبليغ -->
+    <!-- Report Confirmation -->
     <div id="reportConfirmModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeReportModal()"></div>
-        <div class="relative bg-surface-50 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-white/10 text-center shadow-2xl w-full max-w-md">
-            <h2 class="text-lg md:text-xl font-black text-white mb-4">هل أنت مستعد للتبليغ؟</h2>
-            <p class="text-zinc-400 text-sm mb-8 leading-relaxed font-medium">
-                سأقوم بفتح الرابط الآن، تذكر <span class="text-white font-bold underline">إيقاف الفيديو فوراً</span> لمنع ترويجه.
-            </p>
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-sm" onclick="closeReportModal()"></div>
+        <div class="relative bg-[#16161a] p-8 rounded-[2.5rem] border border-white/10 text-center shadow-2xl w-full max-w-sm">
+            <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i data-lucide="info" class="w-8 h-8 text-red-500"></i>
+            </div>
+            <h2 class="text-xl font-black text-white mb-4">تأكيد التوجه للتبليغ</h2>
+            <p class="text-zinc-400 text-sm mb-8">هل أنت مستعد لاتباع خطوات البروتوكول؟</p>
             <div class="space-y-3">
-                <button id="confirmRedirectBtn" class="w-full py-4 bg-brand-500 text-white font-black rounded-2xl active:scale-95 shadow-lg shadow-brand-500/20">
-                    نعم، وجهني للتبليغ
-                </button>
-                <button onclick="closeReportModal()" class="w-full py-2 text-zinc-500 text-sm font-bold">
-                    إلغاء
-                </button>
+                <button id="confirmRedirectBtn" class="w-full py-4 bg-brand-500 text-white font-black rounded-2xl shadow-lg shadow-brand-500/20 active:scale-95 transition-transform">بدء التبليغ الآن</button>
+                <button onclick="closeReportModal()" class="w-full py-2 text-zinc-500 text-sm font-bold">تراجع</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyDhs_mAvlTTLUIz-WvWGdQjNPDhnUj32HQ",
             authDomain: "fridgefeast-yo2tu.firebaseapp.com",
@@ -196,97 +178,63 @@
             appId: "1:138292533633:web:f70f16ad10b7a4a552b080"
         };
 
-        // تهيئة Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // العناصر
         const videoGrid = document.getElementById('videoGrid');
         const emptyState = document.getElementById('emptyState');
         const confirmModal = document.getElementById('reportConfirmModal');
         const confirmBtn = document.getElementById('confirmRedirectBtn');
         let activeVideoId = null;
 
-        // تهيئة الأيقونات
-        lucide.createIcons();
+        async function syncInitial() {
+            const videoId = "H7Y_0z5BJ0E";
+            await setDoc(doc(db, "videos", videoId), {
+                id: videoId,
+                title: "محتوى مخالف يتطلب التبليغ الفوري (سياسة حماية الطفل)",
+                risk: "Urgent",
+                createdAt: serverTimestamp()
+            }, { merge: true });
+        }
+        syncInitial();
 
-        // قبول البروتوكول
-        window.acceptProtocol = () => {
-            document.getElementById('protocolModal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        };
-        document.getElementById('btnAcceptProtocol').onclick = window.acceptProtocol;
+        window.closeReportModal = () => { confirmModal.classList.add('hidden'); confirmModal.classList.remove('flex'); };
+        window.triggerReportFlow = (id) => { activeVideoId = id; confirmModal.classList.remove('hidden'); confirmModal.classList.add('flex'); };
+        confirmBtn.onclick = () => { if (activeVideoId) window.open(`https://www.youtube.com/watch?v=${activeVideoId}`, '_blank'); closeReportModal(); };
+        document.getElementById('btnAcceptProtocol').onclick = () => { document.getElementById('protocolModal').classList.add('hidden'); document.body.style.overflow = 'auto'; };
 
-        // وظائف المودال
-        window.closeReportModal = () => {
-            confirmModal.classList.add('hidden');
-            confirmModal.classList.remove('flex');
-            activeVideoId = null;
-        };
-
-        window.triggerReportFlow = (id) => {
-            activeVideoId = id;
-            confirmModal.classList.remove('hidden');
-            confirmModal.classList.add('flex');
-        };
-
-        confirmBtn.onclick = () => {
-            if (activeVideoId) {
-                window.open(`https://www.youtube.com/watch?v=${activeVideoId}`, '_blank');
-                window.closeReportModal();
-            }
-        };
-
-        // جلب الفيديوهات من Firestore في الوقت الفعلي
-        const videosCollection = collection(db, "videos");
-        const q = query(videosCollection, orderBy("createdAt", "desc"));
-
-        onSnapshot(q, (snapshot) => {
+        onSnapshot(collection(db, "videos"), (snapshot) => {
             videoGrid.innerHTML = '';
-            if (snapshot.empty) {
-                emptyState.classList.remove('hidden');
-                return;
-            }
-
+            if (snapshot.empty) { emptyState.classList.remove('hidden'); return; }
             emptyState.classList.add('hidden');
-            snapshot.forEach((doc) => {
-                const video = doc.data();
-                addVideoCard(video);
-            });
+            snapshot.forEach((doc) => addVideoItem(doc.data()));
             lucide.createIcons();
         });
 
-        function addVideoCard(video) {
-            const riskColors = {
-                'Regular': 'text-risk-regular bg-risk-regular/10',
-                'Medium': 'text-risk-medium bg-risk-medium/10',
-                'Urgent': 'text-risk-urgent bg-risk-urgent/10'
-            };
+        function addVideoItem(video) {
+            const riskColors = { 'Regular': 'text-risk-regular', 'Medium': 'text-risk-medium', 'Urgent': 'text-risk-urgent' };
             const riskArabic = { 'Regular': 'عادي', 'Medium': 'متوسط', 'Urgent': 'عاجل' };
-
-            const card = document.createElement('div');
-            card.className = 'video-card group flex flex-col gap-3 md:gap-4 text-right';
-            card.innerHTML = `
-                <div class="relative aspect-video rounded-2xl md:rounded-3xl overflow-hidden bg-zinc-900 border border-white/5 shadow-lg">
-                    <img src="https://img.youtube.com/vi/${video.id}/maxresdefault.jpg" class="w-full h-full object-cover">
-                    <div class="thumb-overlay absolute inset-0 bg-black/40 md:bg-black/60 md:opacity-0 transition-opacity flex items-center justify-center">
-                        <button onclick="triggerReportFlow('${video.id}')" class="bg-brand-500 text-white p-3 md:p-4 rounded-full shadow-2xl active:scale-90 transition-all">
-                            <i data-lucide="flag" class="w-5 h-5 md:w-6 md:h-6"></i>
-                        </button>
+            
+            const item = document.createElement('div');
+            item.className = 'video-item group cursor-pointer';
+            item.onclick = () => triggerReportFlow(video.id);
+            item.innerHTML = `
+                <div class="thumb-wrapper aspect-video mb-4">
+                    <img src="https://img.youtube.com/vi/${video.id}/maxresdefault.jpg" class="w-full h-full object-cover" onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'">
+                    <div class="thumb-overlay absolute inset-0 flex items-center justify-center">
+                        <div class="bg-brand-500 text-white p-4 rounded-full shadow-2xl translate-y-4 group-hover:translate-y-0 transition-transform">
+                            <i data-lucide="flag" class="w-6 h-6"></i>
+                        </div>
                     </div>
                 </div>
-                <div class="px-1">
-                    <h3 class="text-white font-bold text-sm md:text-base leading-snug line-clamp-2 mb-2 md:mb-3">
-                        ${video.title}
-                    </h3>
-                    <div class="flex items-center gap-2">
-                        <span class="px-2 md:px-3 py-1 rounded-lg text-[10px] md:text-[11px] font-black uppercase ${riskColors[video.risk] || riskColors.Regular}">
-                            أولوية: ${riskArabic[video.risk] || riskArabic.Regular}
-                        </span>
+                <div class="text-right px-1">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 rounded-full bg-current ${riskColors[video.risk] || riskColors.Regular}"></span>
+                        <span class="text-[11px] font-black uppercase tracking-tighter ${riskColors[video.risk] || riskColors.Regular}">أولوية: ${riskArabic[video.risk] || riskArabic.Regular}</span>
                     </div>
-                </div>
-            `;
-            videoGrid.appendChild(card);
+                    <h3 class="text-white font-bold text-sm md:text-base leading-snug line-clamp-2 group-hover:text-brand-400 transition-colors">${video.title}</h3>
+                </div>`;
+            videoGrid.appendChild(item);
         }
     </script>
 </body>
